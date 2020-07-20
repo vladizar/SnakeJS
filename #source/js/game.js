@@ -425,7 +425,10 @@ function startGame(animationDuration = 0)
     spawnSnake(gameSettings["snakeLength"], direction);
 
     // Spawn fruit
-    spawnFruit();
+    for (let i = 0; i < gameSettings["minFruitsNumber"]; i++)
+    {
+        spawnFruit();
+    }
 
     // Set up fruits spawner
     fruitsSpawn = setInterval(spawnFruit, timeoutOneSecond * gameSettings["fruitsSpawnInterval"]);
@@ -511,7 +514,7 @@ function gameFrame()
         spawnElement(['snake-block'], snake[snake.length - 1].style.gridColumnStart, snake[snake.length - 1].style.gridRowStart, snake);
 
         // Spawn new fruit if there is no others
-        if (!fruits.length)
+        if (fruits.length < gameSettings["minFruitsNumber"])
         {
             spawnFruit();
         }

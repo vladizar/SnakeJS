@@ -8,6 +8,7 @@ const gameSettingsView = gameSettingsForm.querySelector('select[name=snake-body-
 const gameSettingsFieldSize = gameSettingsForm.querySelector('input[name=game-field-size]');
 const gameSettingsFieldInfinity = gameSettingsForm.querySelector('select[name=game-field-infinity]');
 const gameSettingsMaxFruitsNumber = gameSettingsForm.querySelector('input[name=game-max-fruits]');
+const gameSettingsMinFruitsNumber = gameSettingsForm.querySelector('input[name=game-min-fruits]');
 const gameSettingsFruitsSpawnInterval = gameSettingsForm.querySelector('input[name=fruits-spawn-delay]');
 const gameSettingsSnakeSelfDestruct = gameSettingsForm.querySelector('select[name=snake-self-destruct]');
 
@@ -29,6 +30,7 @@ gameSettingsForm.onsubmit = function (evt)
         "gameFieldSize": Number(gameSettingsFieldSize.value),
         "gameFieldInfinity": Boolean(Number(gameSettingsFieldInfinity.value)),
         "maxFruitsNumber": Number(gameSettingsMaxFruitsNumber.value),
+        "minFruitsNumber": Number(gameSettingsMinFruitsNumber.value),
         "fruitsSpawnInterval": Number(gameSettingsFruitsSpawnInterval.value),
         "snakeView": gameSettingsView.value,
         "snakeSelfDestruct": Boolean(Number(gameSettingsSnakeSelfDestruct.value))
