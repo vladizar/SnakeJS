@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0">
+
+    <title>JS Snake Game. By _vladizar_</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <section class="menu-screen" style="display: ;">
+        <div class="wrapper menu-screen__wrapper">
+            <header class="menu-screen__header">
+                <div class="game-title menu-screen__game-title">
+                    <h1 class="logo game-title__logo">
+                        <span class="logo__first-word">
+                            <span class="logo__char-shadow">S</span>n<span class="logo__char-shadow">a</span>k<span class="logo__char-shadow">e</span>
+                        </span>
+                        <span class="logo__char-shadow">G</span>a<span class="logo__char-shadow">m</span>e
+                    </h1>
+
+                    <p class="game-title__subtitle">
+                        by _vladizar_
+                    </p>
+
+                    <p class="game-title__subtitle">
+                        based on JS
+                    </p>
+                </div>
+            </header>
+
+            <main class="menu-screen__content">
+                <section class="game-settings">
+                    <h2 class="game-settings__title">
+                        Game Settings
+                    </h2>
+
+                    <form class="game-settings-form game-settings__game-settings-form" action="https://echo.htmlacademy.ru" method="GET">
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-snake-start-length">
+                                Start snake's length:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="snake-start-length" id="game-settings-form-snake-start-length" placeholder="2 - 24" value="3" max="24" min="2" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-snake-start-direction">
+                                Start snake's direction:
+                            </label>
+
+                            <select class="game-settings-form__input" name="snake-start-direction" id="game-settings-form-snake-start-direction" required>
+                                <option value="ArrowRight" selected>Right</option>
+                                <option value="ArrowLeft">Left</option>
+                                <option value="ArrowUp">Up</option>
+                                <option value="ArrowDown">Down</option>
+                            </select>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-snake-start-speed">
+                                Start snake's speed:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="snake-start-speed" id="game-settings-form-snake-start-speed" placeholder="1 - 10" value="2" max="10" min="1" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-snake-speed-multiplier">
+                                Snake's overclocking multiplier:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="snake-speed-multiplier" id="game-settings-form-snake-speed-multiplier" placeholder="0.01 - 2" value="0.1" max="2" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-game-field-size">
+                                Game field size:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="game-field-size" id="game-settings-form-game-field-size" placeholder="10 - 100" value="30" max="100" min="10" step="5" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-game-field-infinity">
+                                Game field mode:
+                            </label>
+
+                            <select class="game-settings-form__input" name="game-field-infinity" id="game-settings-form-game-field-infinity" required>
+                                <option value="0" selected>Finite</option>
+                                <option value="1">Endless</option>
+                            </select>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-game-max-fruits">
+                                Max fruits number at the same time on field:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="game-max-fruits" id="game-settings-form-game-max-fruits" placeholder="1 - 100" value="15" max="100" min="1" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-fruits-spawn-delay">
+                                Fruits spawn interval in seconds:
+                            </label>
+
+                            <input class="game-settings-form__input" type="number" name="fruits-spawn-delay" id="game-settings-form-fruits-spawn-delay" placeholder="1 - 100" value="10" max="100" min="1" required>
+                        </div>
+
+                        <div class="game-settings-form__input-group">
+                            <label class="game-settings-form__label" for="game-settings-form-snake-body-view">
+                                Snake's body view:
+                            </label>
+
+                            <select class="game-settings-form__input" name="snake-body-view" id="game-settings-form-snake-body-view" required>
+                                <option value="0" selected>Solid</option>
+                                <option value="2px">Small dotted</option>
+                                <option value="4px">Dotted</option>
+                                <option value="6px">Very dotted</option>
+                            </select>
+                        </div>
+
+                        <div class="game-settings-form__buttons">
+                            <button class="button button_play game-settings-form__button" type="submit">
+                                Start the game!
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+
+            <footer class="footer menu-screen__footer">
+                <div class="social footer__social">
+                    <h2 class="social__title">
+                        Author's social networks:
+                    </h2>
+
+                    <div class="wrapper social__links-wrapper">
+                        <a class="social__link social__link_insta" href="https://www.instagram.com/_vladizar_/" target="_blank" aria-label="Author's Instagram">
+                            <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 512 512.00006" width="30px"><g transform="matrix(0.941104 0 0 0.941104 15.0775 15.0775)"><path d="m261.039062 512c-1.695312 0-3.390624 0-5.097656-.007812-40.132812.097656-77.214844-.921876-113.277344-3.117188-33.0625-2.011719-63.242187-13.4375-87.28125-33.039062-23.195312-18.914063-39.035156-44.488282-47.078124-76.003907-7-27.4375-7.371094-54.371093-7.726563-80.421875-.257813-18.691406-.5234375-40.839844-.578125-63.363281.0546875-22.617187.320312-44.765625.578125-63.457031.355469-26.046875.726563-52.980469 7.726563-80.421875 8.042968-31.515625 23.882812-57.089844 47.078124-76.003907 24.039063-19.601562 54.21875-31.027343 87.285157-33.039062 36.0625-2.191406 73.152343-3.2148438 113.371093-3.1171875 40.144532-.0859375 77.214844.9257815 113.277344 3.1171875 33.0625 2.011719 63.242188 13.4375 87.28125 33.039062 23.199219 18.914063 39.035156 44.488282 47.078125 76.003907 7 27.4375 7.371094 54.375 7.726563 80.421875.257812 18.691406.527344 40.839844.578125 63.363281v.09375c-.050781 22.523437-.320313 44.671875-.578125 63.363281-.355469 26.046875-.722656 52.980469-7.726563 80.421875-8.042969 31.515625-23.878906 57.089844-47.078125 76.003907-24.039062 19.601562-54.21875 31.027343-87.28125 33.039062-34.535156 2.101562-70.011718 3.125-108.277344 3.125zm-5.097656-40.007812c39.480469.09375 75.730469-.902344 110.945313-3.042969 25-1.519531 46.675781-9.632813 64.433593-24.113281 16.414063-13.386719 27.71875-31.855469 33.597657-54.894532 5.828125-22.839844 6.164062-47.363281 6.488281-71.078125.253906-18.566406.519531-40.558593.574219-62.863281-.054688-22.308594-.320313-44.296875-.574219-62.863281-.324219-23.714844-.660156-48.238281-6.488281-71.082031-5.878907-23.039063-17.183594-41.507813-33.597657-54.894532-17.757812-14.476562-39.433593-22.589844-64.433593-24.109375-35.214844-2.144531-71.464844-3.132812-110.851563-3.046875-39.472656-.09375-75.726562.902344-110.941406 3.046875-25 1.519531-46.675781 9.632813-64.433594 24.109375-16.414062 13.386719-27.71875 31.855469-33.597656 54.894532-5.828125 22.84375-6.164062 47.363281-6.488281 71.082031-.253907 18.582031-.519531 40.585937-.574219 62.910156.054688 22.226563.320312 44.234375.574219 62.816406.324219 23.714844.660156 48.238281 6.488281 71.078125 5.878906 23.039063 17.183594 41.507813 33.597656 54.894532 17.757813 14.476562 39.433594 22.589843 64.433594 24.109374 35.214844 2.144532 71.476562 3.144532 110.847656 3.046876zm-.953125-90.992188c-68.921875 0-125-56.074219-125-125s56.078125-125 125-125c68.925781 0 125 56.074219 125 125s-56.074219 125-125 125zm0-210c-46.867187 0-85 38.132812-85 85s38.132813 85 85 85c46.871094 0 85-38.132812 85-85s-38.128906-85-85-85zm139-80c-16.566406 0-30 13.429688-30 30s13.433594 30 30 30c16.570313 0 30-13.429688 30-30s-13.429687-30-30-30zm0 0" data-original="#000000" fill="#000000"/></g></svg>
+                        </a>
+    
+                        <a class="social__link social__link_telegram" href="https://t.me/vladizar123" target="_blank" aria-label="Author's Telegram">
+                            <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -31 512 512" width="30px" height="30px"><g><path d="m123.195312 260.738281 63.679688 159.1875 82.902344-82.902343 142.140625 112.976562 100.082031-450-512 213.265625zm242.5-131.628906-156.714843 142.941406-19.519531 73.566407-36.058594-90.164063zm0 0" data-original="#000000" fill="#000000"/></g> </svg>
+                        </a>
+    
+                        <a class="social__link social__link_git" href="https://github.com/vladizar" target="_blank" aria-label="Author's GitHub">
+                            <?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="30px" viewBox="0 0 24 24" width="30px"><g><path d="m12 .5c-6.63 0-12 5.28-12 11.792 0 5.211 3.438 9.63 8.205 11.188.6.111.82-.254.82-.567 0-.28-.01-1.022-.015-2.005-3.338.711-4.042-1.582-4.042-1.582-.546-1.361-1.335-1.725-1.335-1.725-1.087-.731.084-.716.084-.716 1.205.082 1.838 1.215 1.838 1.215 1.07 1.803 2.809 1.282 3.495.981.108-.763.417-1.282.76-1.577-2.665-.295-5.466-1.309-5.466-5.827 0-1.287.465-2.339 1.235-3.164-.135-.298-.54-1.497.105-3.121 0 0 1.005-.316 3.3 1.209.96-.262 1.98-.392 3-.398 1.02.006 2.04.136 3 .398 2.28-1.525 3.285-1.209 3.285-1.209.645 1.624.24 2.823.12 3.121.765.825 1.23 1.877 1.23 3.164 0 4.53-2.805 5.527-5.475 5.817.42.354.81 1.077.81 2.182 0 1.578-.015 2.846-.015 3.229 0 .309.21.678.825.56 4.801-1.548 8.236-5.97 8.236-11.173 0-6.512-5.373-11.792-12-11.792z" data-original="#000000" fill="#000000"/></g> </svg>
+                        </a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <section class="game-screen" style="display: none;">
+        <h2 class="game-screen__score-title">
+            Score: <span class="game-screen__score">0</span>
+        </h2>
+
+        <div class="game-screen__field">
+
+            <!-- Game objects example
+
+            <div class="snake-block snake-block_head" style="grid-column-start: 27; grid-row-start: 25;"></div>
+            <div class="snake-block" style="grid-column-start: 26; grid-row-start: 25;"></div>
+            <div class="fruit apple-red" style="grid-column-start: 24; grid-row-start: 25;"></div>
+            <div class="fruit apple-yellow" style="grid-column-start: 23; grid-row-start: 25;"></div>
+            <div class="fruit banana" style="grid-column-start: 22; grid-row-start: 25;"></div>
+            <div class="fruit strawberry" style="grid-column-start: 21; grid-row-start: 25;"></div>
+            <div class="fruit grapes" style="grid-column-start: 20; grid-row-start: 25;"></div> 
+
+            -->
+
+        </div>
+    </section>
+
+    <section class="death-screen" style="display: none;">
+        <h2 class="death-screen__title">
+            Game over
+        </h2>
+
+        <p class="death-screen__score-text">
+            You gained <span class="death-screen__score">0</span> points
+        </p>
+
+        <div class="death-screen__buttons">
+            <button class="button button_play death-screen__button" type="button">
+                Play again
+            </button>
+
+            <button class="button button_menu death-screen__button" type="button">
+                Go lobby
+            </button>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
