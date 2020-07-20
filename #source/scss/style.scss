@@ -100,12 +100,20 @@ body
 .snake-block
 {
     background-color: chartreuse;
+    transition: 0.2s;
+    position: relative;
+    z-index: 1;
 
     &_head
     {
         background-color: rgb(90, 180, 0);
-        position: relative;
-        z-index: 1;
+        z-index: 2;
+    }
+
+    &_damaged
+    {
+        background-color: rgb(202, 32, 32);
+        z-index: 0;
     }
 }
 

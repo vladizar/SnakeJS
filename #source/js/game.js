@@ -446,6 +446,17 @@ function endGame()
     deathScreen.style.display = gameScreen.style.display = "";
 }
 
+// Changes speed considering 'changeByValue'
+function changeSpeed(changeByValue)
+{
+    if (speed + changeByValue > gameSettings["speed"])
+    {
+        speed += changeByValue;
+        clearInterval(gameFrames);
+        gameFrames = setInterval(gameFrame, timeoutOneSecond / speed);
+    }
+}
+
 // Represetns one game frame, moves snake, stops game and change score if needed, 
 function gameFrame()
 {
@@ -453,9 +464,33 @@ function gameFrame()
     moveSnake();
 
     // If snake hits herself stop the game
-    if (isPositionCollisions(snake[0].style.gridColumnStart, snake[0].style.gridRowStart, [snake], [0, 1, 2, 3]))
+    let selfHitPlace = isPositionCollisions(snake[0].style.gridColumnStart, snake[0].style.gridRowStart, [snake], [0, 1, 2, 3])
+    if (selfHitPlace)
     {
-        endGame();
+        if (gameSettings["snakeSelfDestruct"])
+        {
+            for (let i = snake.length - 1; i >= selfHitPlace; i--)
+            {
+                let timeout = (timeoutOneSecond / speed) * (snake.length - 1 - i) / 8;
+                setTimeout(() =>
+                {
+                    snake[i].classList.add("snake-block_damaged");
+                    setTimeout(() =>
+                    {
+                        removeElement(snake, i);
+                        if (score)
+                        {
+                            changeSpeed(-gameSettings["speedMultiplier"]);
+                            scoreCounter.textContent = --score;
+                        }
+                    }, timeout / 1.5);
+                }, timeout);
+            }
+        }
+        else
+        {
+            endGame();
+        }
     }
 
     // If snake eats any fruit
@@ -466,9 +501,7 @@ function gameFrame()
         addFruitScore(fruits[eatenFruit].classList[1]);
 
         // Increment speed
-        speed += (score - scoreCounter.textContent) * gameSettings["speedMultiplier"];
-        clearInterval(gameFrames);
-        gameFrames = setInterval(gameFrame, timeoutOneSecond / speed);
+        changeSpeed((score - scoreCounter.textContent) * gameSettings["speedMultiplier"]);
 
         // Show new score to user
         scoreCounter.textContent = score;
