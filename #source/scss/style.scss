@@ -191,6 +191,11 @@ body
     {
 
     }
+
+    &_animated
+    {
+        animation: menu 0.4s linear;
+    }
 }
 
 .game-title
@@ -634,5 +639,22 @@ body
     100%
     {
         transform: translateY(0);
+    }
+}
+
+@keyframes menu
+{
+    0%
+    {
+        transform: translateX(-100%);
+        position: relative;
+        z-index: 10;
+    }
+
+    100%
+    {
+        transform: translateX(0);
+        position: relative;
+        z-index: 10;
     }
 }

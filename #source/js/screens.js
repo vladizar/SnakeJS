@@ -44,7 +44,11 @@ gameSettingsForm.onsubmit = function (evt)
 goLobbyButton.onclick = function ()
 {
     // Show menu screen and hide all others
-    gameScreen.style.display = deathScreen.style.display = "none";
+    setTimeout(() =>
+    {
+        gameScreen.style.display = deathScreen.style.display = "none";
+    }, 400);
+    menuScreen.classList.add('menu-screen_animated');
     menuScreen.style.display = "";
 }
 
