@@ -149,6 +149,16 @@ body
     background-image: url(../img/gameObjects/grapes.svg);
 }
 
+.water
+{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-image: url(../img/gameObjects/water2.svg);
+    position: relative;
+    overflow: hidden;
+}
+
 // CUSTOM STYLES
 
 // MENU SCREEN

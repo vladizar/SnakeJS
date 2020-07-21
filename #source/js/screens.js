@@ -11,6 +11,7 @@ const gameSettingsMaxFruitsNumber = gameSettingsForm.querySelector('input[name=g
 const gameSettingsMinFruitsNumber = gameSettingsForm.querySelector('input[name=game-min-fruits]');
 const gameSettingsFruitsSpawnInterval = gameSettingsForm.querySelector('input[name=fruits-spawn-delay]');
 const gameSettingsSnakeSelfDestruct = gameSettingsForm.querySelector('select[name=snake-self-destruct]');
+const gameSettingsWaterAreaSize = gameSettingsForm.querySelector('input[name=water-area-size]');
 
 // SCREENS SWITCH LOGIC
 
@@ -33,8 +34,9 @@ gameSettingsForm.onsubmit = function (evt)
         "minFruitsNumber": Number(gameSettingsMinFruitsNumber.value),
         "fruitsSpawnInterval": Number(gameSettingsFruitsSpawnInterval.value),
         "snakeView": gameSettingsView.value,
-        "snakeSelfDestruct": Boolean(Number(gameSettingsSnakeSelfDestruct.value))
-    }
+        "snakeSelfDestruct": Boolean(Number(gameSettingsSnakeSelfDestruct.value)),
+        "waterAreaSize": Number(gameSettingsWaterAreaSize.value) / 100 * Number(gameSettingsFieldSize.value) ** 2
+    };
 
     // Start game with animation delay
     startGame(400);

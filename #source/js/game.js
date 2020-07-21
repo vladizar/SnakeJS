@@ -11,9 +11,11 @@ let gameFrames;
 let fruitsSpawn;
 let fruits = [];
 let snake = [];
+let water = [];
 let gameSettings = {};
 let direction = "";
 let score = 0;
+let highScore = 0;
 let speed = 0;
 
 // Special variable for swipe
@@ -128,13 +130,19 @@ function getChance()
     return Math.random().toFixed(2);
 }
 
-// Returns random x and y positions between 0 and 'gameFieldSize'
+// Returns random x and y positions between 1 and 'gameFieldSize', prevents position collisions
 function getRandomFieldPosition()
 {
-    return {
-            "x": getRandomInt(gameSettings["gameFieldSize"]),
-            "y": getRandomInt(gameSettings["gameFieldSize"])
-           };
+    let position = {"x": 0, "y": 0};
+    do
+    {
+        position = {
+                    "x": getRandomInt(gameSettings["gameFieldSize"]),
+                    "y": getRandomInt(gameSettings["gameFieldSize"])
+                   };
+    }
+    while (isPositionCollisions(position.x, position.y, [fruits, snake, water]) || !isOnfieldPosition(position.x, position.y));
+    return position;
 }
 
 // FRUITS LOGIC
@@ -154,7 +162,7 @@ function chooseRandomFruit()
     {
         return 'banana';
     }
-    else if (!fruits.length)
+    else if (fruits.length == gameSettings["minFruitsNumber"] - 1)
     {
         return 'apple-red';
     }
@@ -189,6 +197,11 @@ function addFruitScore(fruitClass)
             score += 10;
             break;
     }
+
+    if (score > highScore)
+    {
+        highScore = score;
+    }
 }
 
 // Spawns a fruit (if their number is less than 'maxFruitsNumber') with random name considering it's chance on random game field position
@@ -198,12 +211,7 @@ function spawnFruit()
     if (fruits.length < gameSettings["maxFruitsNumber"])
     {
         // Store fruit positon if it is on game field and there is no collisions with snake body
-        let position;
-        do
-        {
-            position = getRandomFieldPosition();
-        }
-        while (isPositionCollisions(position.x, position.y, [fruits, snake]) || !isOnfieldPosition(position.x, position.y));
+        let position = getRandomFieldPosition();
 
         // Store random fruit name considering their chances
         fruitClass = chooseRandomFruit();
@@ -211,6 +219,44 @@ function spawnFruit()
         // Appear it on the game field
         spawnElement(["fruit", fruitClass], position.x, position.y, fruits);
     }
+}
+
+// WATER LOGIC
+
+function spawnWater()
+{
+    position = getRandomFieldPosition();
+    switch (gameSettings["direction"])
+    {
+        case "ArrowRight":
+            if (position.y == snake[0].style.gridRowStart && position.x > snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x < Number(snake[0].style.gridColumnStart) + gameSettings["speed"] * 2)
+            {
+                position.y += 1;
+            }
+            break;
+    
+        case "ArrowLeft":
+            if (position.y == snake[0].style.gridRowStart && position.x < snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x > Number(snake[0].style.gridColumnStart) - gameSettings["speed"] * 2)
+            {
+                position.y += 1;
+            }
+            break;
+
+        case "ArrowUp":
+            if (position.x == snake[0].style.gridColumnStart && position.y < snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y > Number(snake[0].style.gridRowStart) - gameSettings["speed"] * 2)
+            {
+                position.x += 1;
+            }
+            break;
+    
+        case "ArrowDown":
+            if (position.x == snake[0].style.gridColumnStart && position.y > snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y < Number(snake[0].style.gridRowStart) + gameSettings["speed"] * 2)
+            {
+                position.x += 1;
+            }
+            break;
+    }
+    spawnElement(['water'], position.x, position.y, water);
 }
 
 // SNAKE
@@ -417,9 +463,10 @@ function startGame(animationDuration = 0)
     gameField.innerHTML = "";
     speed = gameSettings["speed"];
     direction = gameSettings["direction"];
-    score = scoreCounter.textContent = 0;
+    score = highScore = scoreCounter.textContent = 0;
     snake = [];
     fruits = [];
+    water = [];
 
     // Spawn snake
     spawnSnake(gameSettings["snakeLength"], direction);
@@ -428,6 +475,11 @@ function startGame(animationDuration = 0)
     for (let i = 0; i < gameSettings["minFruitsNumber"]; i++)
     {
         spawnFruit();
+    }
+
+    while (water.length < gameSettings["waterAreaSize"])
+    {
+        spawnWater();
     }
 
     // Set up fruits spawner
@@ -442,7 +494,7 @@ function endGame()
     clearInterval(fruitsSpawn);
 
     // Change death score counter
-    deathScore.textContent = score;
+    deathScore.textContent = highScore;
 
     // Hide menu, show game screen with death screen
     menuScreen.style.display = "none";
@@ -518,5 +570,20 @@ function gameFrame()
         {
             spawnFruit();
         }
+    }
+
+    let waterHit = isPositionCollisions(snake[0].style.gridColumnStart, snake[0].style.gridRowStart, [water]);
+    if (waterHit)
+    {
+        removeElement(water, waterHit);
+
+        if (score - 5 > -1)
+        {
+            removeElement(snake, snake.length - 1);
+            changeSpeed(-gameSettings["speedMultiplier"] * 5);
+            score -= 5;
+            scoreCounter.textContent = score;
+        }
+        else { endGame(); }
     }
 }
