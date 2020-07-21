@@ -13,6 +13,11 @@ const gameSettingsFruitsSpawnInterval = gameSettingsForm.querySelector('input[na
 const gameSettingsSnakeSelfDestruct = gameSettingsForm.querySelector('select[name=snake-self-destruct]');
 const gameSettingsWaterAreaSize = gameSettingsForm.querySelector('input[name=water-area-size]');
 
+// Buttons
+const playAgainButtons = document.querySelectorAll('.button_play');
+const goLobbyButtons = document.querySelectorAll('.button_menu');
+const continueButton = document.querySelector('.button_continue');
+
 // SCREENS SWITCH LOGIC
 
 // When user starts the game from menu screen
@@ -42,21 +47,57 @@ gameSettingsForm.onsubmit = function (evt)
     startGame(400);
 }
 
-// When user clicks on lobby button
-goLobbyButton.onclick = function ()
+// Iterate over play again buttons
+for (const button of playAgainButtons)
 {
-    // Show menu screen and hide all others
-    setTimeout(() =>
+    // When user clicks on play again button
+    button.onclick = function ()
     {
-        gameScreen.style.display = deathScreen.style.display = "none";
-    }, 400);
-    menuScreen.classList.add('menu-screen_animated');
-    menuScreen.style.display = "";
+        // Start game without delay
+        startGame();
+    }
 }
 
-// When user clicks on play again button
-playAgainButton.onclick = function ()
+// Ignore start game button
+playAgainButtons[0].onclick = () => {void this.offsetWidth;};
+
+// Iterate over lobby buttons
+for (const button of goLobbyButtons)
 {
-    // Start game without delay
-    startGame();
+    // When user clicks on lobby button
+    button.onclick = function ()
+    {
+        // Stop game procceses
+        clearInterval(gameFrames);
+        clearInterval(fruitsSpawn);
+        gameFrames = false;
+
+        // Show menu screen and hide all others
+        setTimeout(() =>
+        {
+            gameScreen.style.display = pauseScreen.style.display = deathScreen.style.display = "none";
+        }, 400);
+        menuScreen.classList.add('menu-screen_animated');
+        menuScreen.style.display = "";
+    }
+}
+
+// When user clicks on continue button
+continueButton.onclick = function ()
+{
+    // Continue game
+    continueGame();
+}
+
+gameScreen.onclick = function ()
+{
+    pauseGame();
+}
+
+window.onkeyup = function (evt)
+{
+    if (evt.key == " ")
+    {
+        pauseGame();
+    }
 }

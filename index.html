@@ -148,7 +148,7 @@
                                 Water area size in percents (%):
                             </label>
 
-                            <input class="game-settings-form__input" type="number" name="water-area-size" id="game-settings-form-water-area-size" placeholder="0 - 40" value="20" max="40" min="0" required>
+                            <input class="game-settings-form__input" type="number" name="water-area-size" id="game-settings-form-water-area-size" placeholder="0 - 40" value="15" max="40" min="0" required>
                         </div>
 
                         <div class="game-settings-form__buttons">
@@ -224,6 +224,42 @@
             <button class="button button_menu death-screen__button" type="button">
                 Go lobby
             </button>
+        </div>
+    </section>
+
+    <section class="pause-screen" style="display: none;">
+        <div class="wrapper pause-screen__wrapper" style="display: none;">
+            <h2 class="pause-screen__title">
+                Game Paused
+            </h2>
+    
+            <p class="pause-screen__score-text">
+                Current game score: <span class="pause-screen__score">0</span>
+            </p>
+    
+            <p class="pause-screen__score-text">
+                Current game highscore: <span class="pause-screen__score pause-screen__score_highest">0</span>
+            </p>
+    
+            <div class="pause-screen__buttons">
+                <button class="button button_play pause-screen__button" type="button">
+                    Play again
+                </button>
+    
+                <button class="button button_menu pause-screen__button" type="button">
+                    Go lobby
+                </button>
+    
+                <button class="button button_continue pause-screen__button" type="button">
+                    Continue
+                </button>
+            </div>
+        </div>
+        
+        <div class="countdown pause-screen__countdown" style="display: none;">
+            <p class="countdown__number" style="display: none;">3</p>
+            <p class="countdown__number" style="display: none;">2</p>
+            <p class="countdown__number" style="display: none;">1</p>
         </div>
     </section>
 

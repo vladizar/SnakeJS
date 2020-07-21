@@ -29,6 +29,13 @@ const scoreCounter = gameScreen.querySelector('.game-screen__score');
 // On death screen
 const deathScore = deathScreen.querySelector('.death-screen__score');
 
+// On pause screen
+const pauseContent = pauseScreen.querySelector('.pause-screen__wrapper');
+const pauseCountdown = pauseScreen.querySelector('.pause-screen__countdown');
+const pauseCountdownNumbers = pauseCountdown.querySelectorAll('.countdown__number');
+const pauseScore = pauseScreen.querySelector('.pause-screen__score');
+const pauseHighScore = pauseScreen.querySelector('.pause-screen__score_highest');
+
 // GAME LOGIC
 
 // GLOBAL ELEMENTS ACTIONS
@@ -229,28 +236,28 @@ function spawnWater()
     switch (gameSettings["direction"])
     {
         case "ArrowRight":
-            if (position.y == snake[0].style.gridRowStart && position.x > snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x < Number(snake[0].style.gridColumnStart) + gameSettings["speed"] * 2)
+            if (position.y == snake[0].style.gridRowStart && position.x > snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x < Number(snake[0].style.gridColumnStart) + gameSettings["speed"] * 3)
             {
                 position.y += 1;
             }
             break;
     
         case "ArrowLeft":
-            if (position.y == snake[0].style.gridRowStart && position.x < snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x > Number(snake[0].style.gridColumnStart) - gameSettings["speed"] * 2)
+            if (position.y == snake[0].style.gridRowStart && position.x < snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x > Number(snake[0].style.gridColumnStart) - gameSettings["speed"] * 3)
             {
                 position.y += 1;
             }
             break;
 
         case "ArrowUp":
-            if (position.x == snake[0].style.gridColumnStart && position.y < snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y > Number(snake[0].style.gridRowStart) - gameSettings["speed"] * 2)
+            if (position.x == snake[0].style.gridColumnStart && position.y < snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y > Number(snake[0].style.gridRowStart) - gameSettings["speed"] * 3)
             {
                 position.x += 1;
             }
             break;
     
         case "ArrowDown":
-            if (position.x == snake[0].style.gridColumnStart && position.y > snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y < Number(snake[0].style.gridRowStart) + gameSettings["speed"] * 2)
+            if (position.x == snake[0].style.gridColumnStart && position.y > snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y < Number(snake[0].style.gridRowStart) + gameSettings["speed"] * 3)
             {
                 position.x += 1;
             }
@@ -296,6 +303,7 @@ document.addEventListener('touchend', function (evt)
         let swipeDirection = (touchPositions[0].y > touchPositions[1].y) ? "ArrowUp" : "ArrowDown";
         switchDirection(swipeDirection);
     }
+    else { pauseGame(); }
 }, false);
 
 // When user pressed any key
@@ -308,23 +316,26 @@ window.onkeydown = function (evt)
 // Switches direction if possible
 function switchDirection(newDirection)
 {
-    switch (newDirection)
+    if (gameFrames)
     {
-        case "ArrowRight":
-            direction = (Number(snake[0].style.gridColumnStart) + 1 == snake[1].style.gridColumnStart) ? direction : newDirection;
-            break;
+        switch (newDirection)
+        {
+            case "ArrowRight":
+                direction = (Number(snake[0].style.gridColumnStart) + 1 == snake[1].style.gridColumnStart) ? direction : newDirection;
+                break;
 
-        case "ArrowLeft":
-            direction = (Number(snake[0].style.gridColumnStart) - 1 == snake[1].style.gridColumnStart) ? direction : newDirection;
-            break;
+            case "ArrowLeft":
+                direction = (Number(snake[0].style.gridColumnStart) - 1 == snake[1].style.gridColumnStart) ? direction : newDirection;
+                break;
 
-        case "ArrowUp":
-            direction = (Number(snake[0].style.gridRowStart) - 1 == snake[1].style.gridRowStart) ? direction : newDirection;
-            break;
+            case "ArrowUp":
+                direction = (Number(snake[0].style.gridRowStart) - 1 == snake[1].style.gridRowStart) ? direction : newDirection;
+                break;
 
-        case "ArrowDown":
-            direction = (Number(snake[0].style.gridRowStart) + 1 == snake[1].style.gridRowStart) ? direction : newDirection;
-            break;
+            case "ArrowDown":
+                direction = (Number(snake[0].style.gridRowStart) + 1 == snake[1].style.gridRowStart) ? direction : newDirection;
+                break;
+        }
     }
 }
 
@@ -449,7 +460,7 @@ function startGame(animationDuration = 0)
     setTimeout(() =>
     {
         // Hide menu and death screens
-        menuScreen.style.display = deathScreen.style.display = "none";
+        menuScreen.style.display = deathScreen.style.display = pauseScreen.style.display = "none";
 
         // Start game
         gameFrames = setInterval(gameFrame, timeoutOneSecond / speed);
@@ -492,13 +503,66 @@ function endGame()
     // Stop game procceses
     clearInterval(gameFrames);
     clearInterval(fruitsSpawn);
+    gameFrames = false;
 
     // Change death score counter
     deathScore.textContent = highScore;
 
     // Hide menu, show game screen with death screen
-    menuScreen.style.display = "none";
+    menuScreen.style.display = pauseScreen.style.display = "none";
     deathScreen.style.display = gameScreen.style.display = "";
+}
+
+// Pauses the game
+function pauseGame()
+{
+    if (gameFrames)
+    {
+        // Stop game procceses
+        clearInterval(gameFrames);
+        clearInterval(fruitsSpawn);
+
+        // Change score counters
+        pauseScore.textContent = score;
+        pauseHighScore.textContent = highScore;
+
+        // Hide menu and death screens, show game screen with pause screen
+        menuScreen.style.display = deathScreen.style.display = pauseCountdown.style.display = "none";
+        pauseScreen.style.display = pauseContent.style.display = gameScreen.style.display = "";
+    }
+}
+
+// Continues the game
+function continueGame()
+{
+    pauseContent.style.display = "none";
+    pauseCountdown.style.display = "";
+
+    let i = 0;
+    pauseCountdownNumbers[i].style.display = "";
+
+    let countdown = setInterval(() =>
+    {
+        i++;
+
+        pauseCountdownNumbers[i - 1].style.display = "none";
+        pauseCountdownNumbers[i].style.display = "";
+    }, 1100);
+
+    // When animation has gone
+    setTimeout(() =>
+    {
+        clearInterval(countdown);
+
+        // Hide menu, death and pause screens
+        menuScreen.style.display = pauseScreen.style.display = pauseCountdown.style.display = deathScreen.style.display = "none";
+
+        // Start game
+        gameFrames = setInterval(gameFrame, timeoutOneSecond / speed);
+
+        // Set up fruits spawner
+        fruitsSpawn = setInterval(spawnFruit, timeoutOneSecond * gameSettings["fruitsSpawnInterval"]);
+    }, timeoutOneSecond * 3.3);
 }
 
 // Changes speed considering 'changeByValue'
