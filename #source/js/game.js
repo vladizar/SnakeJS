@@ -5,6 +5,14 @@ const timeoutOneSecond = 1000;
 const chanceBanana = 0.20;
 const chanceStrawberry = 0.10;
 const chanceGrapes = 0.05;
+const appleYellowPoints = 1;
+const appleRedPoints = 2;
+const bananaPoints = 3;
+const strawberryPoints = 5;
+const grapesPoints = 10;
+const waterHitPoints = -5;
+const crashGameAttempts = 100;
+const swipeLength = 30;
 
 // Game variables
 let gameFrames;
@@ -83,7 +91,7 @@ function moveElement(elem, elemPosX, elemPosY)
 // Checks if position is on game field
 function isOnfieldPosition(posX, posY)
 {
-    if ((posX > gameSettings["gameFieldSize"] || posY > gameSettings["gameFieldSize"]) || (posX < 1 || posY < 1)) 
+    if ((posX > gameSettings["gameFieldSize"] || posY > gameSettings["gameFieldSize"]) || (posX < 1 || posY < 1))
     {
         return false;
     }
@@ -108,10 +116,7 @@ function isPositionCollisions(posX, posY, elemsArrayArray, ignorElems = [-1])
             if (elem.style.gridColumnStart == posX && elem.style.gridRowStart == posY)
             {
                 // If element should be ignored - ignore, else return it's index
-                if (ignorElems[i] == i)
-                {
-                    continue;
-                }
+                if (ignorElems[i] == i) { continue; }
 
                 return i;
             }
@@ -145,10 +150,7 @@ function getRandomFieldPosition()
     let attempts = 0;
     do
     {
-        if (++attempts > 100)
-        {
-            endGame();
-        }
+        if (++attempts > crashGameAttempts) { endGame(); }
 
         position.x = getRandomInt(gameSettings["gameFieldSize"]);
         position.y = getRandomInt(gameSettings["gameFieldSize"]);
@@ -164,26 +166,11 @@ function getRandomFieldPosition()
 // Returns fruit name considering their chances
 function chooseRandomFruit()
 {
-    if (getChance() <= chanceGrapes) 
-    {
-        return 'grapes';
-    }
-    else if (getChance() <= chanceStrawberry) 
-    {
-        return 'strawberry';
-    }
-    else if (getChance() <= chanceBanana) 
-    {
-        return 'banana';
-    }
-    else if (fruits.length == gameSettings["minFruitsNumber"] - 1)
-    {
-        return 'apple-red';
-    }
-    else
-    {
-        return 'apple-yellow';
-    }
+    if (getChance() <= chanceGrapes) { return 'grapes'; }
+    else if (getChance() <= chanceStrawberry) { return 'strawberry'; }
+    else if (getChance() <= chanceBanana) { return 'banana'; }
+    else if (fruits.length == gameSettings["minFruitsNumber"] - 1) { return 'apple-red'; }
+    else { return 'apple-yellow'; }
 }
 
 // Increments score considering fruit name
@@ -192,30 +179,27 @@ function addFruitScore(fruitClass)
     switch (fruitClass)
     {
         case "apple-yellow":
-            score++;
+            score += appleYellowPoints;
             break;
     
         case "apple-red":
-            score += 2;
+            score += appleRedPoints;
             break;
 
         case "banana":
-            score += 3;
+            score += bananaPoints;
             break;
     
         case "strawberry":
-            score += 5;
+            score += strawberryPoints;
             break;
     
         case "grapes":
-            score += 10;
+            score += grapesPoints;
             break;
     }
 
-    if (score > highScore)
-    {
-        highScore = score;
-    }
+    if (score > highScore) { highScore = score; }
 }
 
 // Spawns a fruit (if their number is less than 'maxFruitsNumber') with random name considering it's chance on random game field position
@@ -239,32 +223,33 @@ function spawnFruit()
 
 function spawnWater()
 {
-    position = getRandomFieldPosition();
+    const comfortableObstacleDistance = gameSettings["speed"] * 3;
+    let position = getRandomFieldPosition();
     switch (gameSettings["direction"])
     {
         case "ArrowRight":
-            if (position.y == snake[0].style.gridRowStart && position.x > snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x < Number(snake[0].style.gridColumnStart) + gameSettings["speed"] * 3)
+            if (position.y == snake[0].style.gridRowStart && position.x > snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x < Number(snake[0].style.gridColumnStart) + comfortableObstacleDistance)
             {
                 position.y += 1;
             }
             break;
     
         case "ArrowLeft":
-            if (position.y == snake[0].style.gridRowStart && position.x < snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x > Number(snake[0].style.gridColumnStart) - gameSettings["speed"] * 3)
+            if (position.y == snake[0].style.gridRowStart && position.x < snake[0].style.gridColumnStart - gameSettings["snakeLength"] && position.x > Number(snake[0].style.gridColumnStart) - comfortableObstacleDistance)
             {
                 position.y += 1;
             }
             break;
 
         case "ArrowUp":
-            if (position.x == snake[0].style.gridColumnStart && position.y < snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y > Number(snake[0].style.gridRowStart) - gameSettings["speed"] * 3)
+            if (position.x == snake[0].style.gridColumnStart && position.y < snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y > Number(snake[0].style.gridRowStart) - comfortableObstacleDistance)
             {
                 position.x += 1;
             }
             break;
     
         case "ArrowDown":
-            if (position.x == snake[0].style.gridColumnStart && position.y > snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y < Number(snake[0].style.gridRowStart) + gameSettings["speed"] * 3)
+            if (position.x == snake[0].style.gridColumnStart && position.y > snake[0].style.gridRowStart - gameSettings["snakeLength"] && position.y < Number(snake[0].style.gridRowStart) + comfortableObstacleDistance)
             {
                 position.x += 1;
             }
@@ -296,15 +281,15 @@ document.addEventListener('touchend', function (evt)
     // Store horizontal or not direction of swipe
     let horizontal = Math.abs(touchPositions[0].x - touchPositions[1].x) > Math.abs(touchPositions[0].y - touchPositions[1].y);
     
-    // If swipe is horizontal and longer than 30px
-    if (horizontal && Math.abs(touchPositions[0].x - touchPositions[1].x) > 30) 
+    // If swipe is horizontal and longer than 'swipeLength'
+    if (horizontal && Math.abs(touchPositions[0].x - touchPositions[1].x) > swipeLength) 
     {
         // Store swipe direction and change snake direction
         let swipeDirection = (touchPositions[0].x > touchPositions[1].x) ? "ArrowLeft" : "ArrowRight";
         switchDirection(swipeDirection);
     }
-    // If swipe is vertical and longer than 50px
-    else if(Math.abs(touchPositions[0].y - touchPositions[1].y) > 30)
+    // If swipe is vertical and longer than 'swipeLength'
+    else if(Math.abs(touchPositions[0].y - touchPositions[1].y) > swipeLength)
     {
         // Store swipe direction and change snake direction
         let swipeDirection = (touchPositions[0].y > touchPositions[1].y) ? "ArrowUp" : "ArrowDown";
@@ -398,14 +383,9 @@ function moveSnake()
             {
                 snake[0].style.gridColumnStart++;
             }
-            else if (gameSettings["gameFieldInfinity"])
-            {
-                snake[0].style.gridColumnStart = 1;
-            }
-            else
-            {
-                endGame();
-            }
+            else if (gameSettings["gameFieldInfinity"]) { snake[0].style.gridColumnStart = 1; }
+            else { endGame(); }
+
             break;
 
         case "ArrowLeft":
@@ -413,14 +393,9 @@ function moveSnake()
             {
                 snake[0].style.gridColumnStart--;
             }
-            else if (gameSettings["gameFieldInfinity"])
-            {
-                snake[0].style.gridColumnStart = gameSettings["gameFieldSize"];
-            }
-            else
-            {
-                endGame();
-            }
+            else if (gameSettings["gameFieldInfinity"]) { snake[0].style.gridColumnStart = gameSettings["gameFieldSize"]; }
+            else { endGame(); }
+
             break;
 
         case "ArrowUp":
@@ -428,14 +403,9 @@ function moveSnake()
             {
                 snake[0].style.gridRowStart--;
             }
-            else if (gameSettings["gameFieldInfinity"])
-            {
-                snake[0].style.gridRowStart = gameSettings["gameFieldSize"];
-            }
-            else
-            {
-                endGame();
-            }
+            else if (gameSettings["gameFieldInfinity"]) { snake[0].style.gridRowStart = gameSettings["gameFieldSize"]; }
+            else { endGame(); }
+
             break;
 
         case "ArrowDown":
@@ -443,14 +413,9 @@ function moveSnake()
             {
                 snake[0].style.gridRowStart++;
             }
-            else if (gameSettings["gameFieldInfinity"])
-            {
-                snake[0].style.gridRowStart = 1;
-            }
-            else
-            {
-                endGame();
-            }
+            else if (gameSettings["gameFieldInfinity"]) { snake[0].style.gridRowStart = 1; }
+            else { endGame(); }
+            
             break;
     }
 }
@@ -569,7 +534,7 @@ function continueGame()
 
         // Set up fruits spawner
         fruitsSpawn = setInterval(spawnFruit, timeoutOneSecond * gameSettings["fruitsSpawnInterval"]);
-    }, timeoutOneSecond * 3.3);
+    }, 3300);
 }
 
 // Changes speed considering 'changeByValue'
@@ -637,10 +602,7 @@ function gameFrame()
         spawnElement(['snake-block'], snake[snake.length - 1].style.gridColumnStart, snake[snake.length - 1].style.gridRowStart, snake);
 
         // Spawn new fruit if there is no others
-        if (fruits.length < gameSettings["minFruitsNumber"])
-        {
-            spawnFruit();
-        }
+        if (fruits.length < gameSettings["minFruitsNumber"]) { spawnFruit(); }
     }
 
     let waterHit = isPositionCollisions(snake[0].style.gridColumnStart, snake[0].style.gridRowStart, [water]);
@@ -648,11 +610,11 @@ function gameFrame()
     {
         removeElement(water, waterHit);
 
-        if (score - 5 > -1)
+        if (score + waterHitPoints > -1)
         {
             removeElement(snake, snake.length - 1);
-            changeSpeed(-gameSettings["speedMultiplier"] * 5);
-            score -= 5;
+            changeSpeed(gameSettings["speedMultiplier"] * waterHitPoints);
+            score += waterHitPoints;
             scoreCounter.textContent = score;
         }
         else { endGame(); }
