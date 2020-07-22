@@ -141,14 +141,21 @@ function getChance()
 function getRandomFieldPosition()
 {
     let position = {"x": 0, "y": 0};
+    let collision;
+    let attempts = 0;
     do
     {
-        position = {
-                    "x": getRandomInt(gameSettings["gameFieldSize"]),
-                    "y": getRandomInt(gameSettings["gameFieldSize"])
-                   };
+        if (++attempts > 100)
+        {
+            endGame();
+        }
+
+        position.x = getRandomInt(gameSettings["gameFieldSize"]);
+        position.y = getRandomInt(gameSettings["gameFieldSize"]);
+        collision = isPositionCollisions(position.x, position.y, [fruits, snake, water]);
     }
-    while (isPositionCollisions(position.x, position.y, [fruits, snake, water]) || !isOnfieldPosition(position.x, position.y));
+    while (collision || collision === 0 || !isOnfieldPosition(position.x, position.y));
+
     return position;
 }
 
@@ -637,7 +644,7 @@ function gameFrame()
     }
 
     let waterHit = isPositionCollisions(snake[0].style.gridColumnStart, snake[0].style.gridRowStart, [water]);
-    if (waterHit)
+    if (waterHit || waterHit === 0)
     {
         removeElement(water, waterHit);
 
