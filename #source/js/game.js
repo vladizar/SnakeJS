@@ -370,10 +370,14 @@ function spawnSnake(snakeLength, direction)
 function moveSnake()
 {
     // Move each body part to body part in front of position
-    for (let i = snake.length - 1; i > 0; i--)
+    if (snake.length - 1)
     {
-        moveElement(snake[i], snake[i - 1].style.gridColumnStart, snake[i - 1].style.gridRowStart);
+        for (let i = snake.length - 1; i > 0; i--)
+        {
+            moveElement(snake[i], snake[i - 1].style.gridColumnStart, snake[i - 1].style.gridRowStart);
+        }
     }
+    else { endGame(); }
 
     // Move snake head considering the direction
     switch (direction)
@@ -415,7 +419,7 @@ function moveSnake()
             }
             else if (gameSettings["gameFieldInfinity"]) { snake[0].style.gridRowStart = 1; }
             else { endGame(); }
-            
+
             break;
     }
 }

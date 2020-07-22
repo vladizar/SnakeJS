@@ -18,6 +18,24 @@ const playAgainButtons = document.querySelectorAll('.button_play');
 const goLobbyButtons = document.querySelectorAll('.button_menu');
 const continueButton = document.querySelector('.button_continue');
 
+// placeholder="2 - 24" value="3" max="24" min="2"
+
+gameSettingsFieldSize.onchange = function ()
+{
+    if (gameSettingsFieldSize.value)
+    {
+        let maxSnakeLength = Math.floor(gameSettingsFieldSize.value / 2);
+
+        gameSettingsLength.placeholder = "2 - " + maxSnakeLength;
+        gameSettingsLength.max = maxSnakeLength;
+
+        if (gameSettingsLength.value > maxSnakeLength)
+        {
+            gameSettingsLength.value = maxSnakeLength;
+        }
+    }
+}
+
 // SCREENS SWITCH LOGIC
 
 // When user starts the game from menu screen
